@@ -8,22 +8,34 @@ import Bart from './assets/img/ExSimpson/Bart.png'
 import { useEffect } from 'react'
 import axios from 'axios'
 function App() {
-  const [data, setData] = useState([])
+  const [data, setData] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
+  const URL = import.meta.env.VITE_URL;
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("https://jsonplaceholder.typicode.com/users");
-      console.log(response.data);
+      const response = await axios.get(URL);
       setData(response.data);
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      setError(err.message);
+    }
+    finally{
+      setLoading(false);
     }
   }
 
   useEffect(() => {
     fetchData();
   }, [])
+
+  if (loading)
+    return <p>loading..</p>
+
+  if (error)
+    return <p>{error}</p>
+
 
   return (
     <>
